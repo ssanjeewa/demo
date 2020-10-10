@@ -1,21 +1,25 @@
 package main
 
 import (
+	"bytes"
+	"crypto/sha256"
 	"fmt"
-
-	"github.com/streadway/amqp"
+	"github.com/ssanjeewa/demo/blockchain"
 )
 
+
+
 func main() {
-	fmt.Println("Go RabbitMQ Tutorial")
+	chain := InitBlockchain()
 
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
+	chain.AddBlock("First Block")
+	chain.AddBlock("Second Block")
+	chain.AddBlock("Third Block")
+
+	for _, b := range chain.blocks {
+		fmt.Printf("Previous Hash: %x\n", b.PrevHash)
+		fmt.Printf("Datam in Block: %s\n", b.Data)
+		fmt.Printf("Hash: %x\n", b.Hash)
+		fmt.Println("-----------------------------")
 	}
-
-	defer conn.Close()
-
-	fmt.Println("Successfully connected to RabbitMQ")
 }
